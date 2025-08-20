@@ -22,7 +22,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/IQAICOM/adk-agent-starter.git"
+		"url": "git+https://github.com/GPSxtreme/coinbase-agent.git"
 	},
 	"keywords": [
 		"ai",
@@ -34,21 +34,26 @@
 	"author": "IQAI",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/IQAICOM/adk-agent-starter/issues"
+		"url": "https://github.com/GPSxtreme/coinbase-agent/issues"
 	},
-	"homepage": "https://github.com/IQAICOM/adk-agent-starter#readme",
+	"homepage": "https://github.com/GPSxtreme/coinbase-agent#readme",
 	"dependencies": {
-		"@iqai/adk": "^0.1.8",
-		"dotenv": "^17.2.0",
-		"zod": "^4.0.5"
+		"@coinbase/agentkit": "^0.10.0",
+		"@coinbase/agentkit-model-context-protocol": "^0.2.0",
+		"@iqai/adk": "^0.2.3",
+		"dotenv": "^17.2.1",
+		"viem": "^2.34.0",
+		"zod": "^4.0.17",
+		"@modelcontextprotocol/sdk": "^1.11.1",
+		"@openrouter/ai-sdk-provider": "^0.7.3"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.1.1",
-		"@types/node": "^22.16.0",
+		"@biomejs/biome": "^2.2.0",
+		"@types/node": "^22.17.2",
 		"husky": "^9.1.7",
-		"lint-staged": "^16.1.2",
+		"lint-staged": "^16.1.5",
 		"rimraf": "^6.0.1",
-		"tsx": "^4.20.3",
-		"typescript": "^5.8.3"
+		"tsx": "^4.20.4",
+		"typescript": "^5.9.2"
 	}
 }
