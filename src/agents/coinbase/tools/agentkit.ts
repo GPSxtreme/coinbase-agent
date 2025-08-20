@@ -7,9 +7,9 @@ import {
 	walletActionProvider,
 	wethActionProvider,
 } from "@coinbase/agentkit";
-import { env } from "process";
 import type { Hex } from "viem";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
+import { env } from "../../../env";
 /**
  * Get the AgentKit instance.
  *
@@ -20,7 +20,7 @@ export async function getAgentKit(): Promise<AgentKit> {
 		let privateKey: Hex | null = null;
 
 		if (!privateKey) {
-			privateKey = (env.PRIVATE_KEY || generatePrivateKey()) as Hex;
+			privateKey = (env.CDP_WALLET_SECRET || generatePrivateKey()) as Hex;
 		}
 
 		const owner = privateKeyToAccount(privateKey);

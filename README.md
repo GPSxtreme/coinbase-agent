@@ -1,75 +1,84 @@
-# 🤖 ADK Agent Starter
+# Coinbase Agent
 
-This is a starter template to start building your own agent with `@iqai/adk` library. 
+A tiny proof‑of‑concept that wires Coinbase AgentKit into the IQAI ADK (adk-ts) using the Model Context Protocol (MCP). AgentKit providers are exposed as MCP SDK tools, then adapted into ADK tools so your ADK agent can call on-chain actions through Coinbase.
 
-## 🚀 Get Started
-Start by cloning the repository or clicking on use as template button on github ui. 
+## How it works
 
-```bash
-git clone https://github.com/IQAICOM/adk-agent-starter.git
-```
+- **AgentKit → MCP**: AgentKit's MCP package exposes its action providers as MCP tools plus a handler.
+- **MCP → ADK**: Those MCP tools are converted to ADK `BaseTool`s and attached to an `AgentBuilder`.
+- **Model**: Uses OpenRouter if `OPEN_ROUTER_KEY` is set; otherwise falls back to the model string configured in `LLM_MODEL`.
 
-📦 Install the dependencies
+### Quick start
+
+1. Install
 
 ```bash
 pnpm install
 ```
 
-▶️ Run the agent
+2. Configure environment
+Create a `.env` with the essentials:
+
+```bash
+# Optional
+DEBUG=false
+OPEN_ROUTER_KEY=your_openrouter_key
+LLM_MODEL=gpt-4.1-mini
+
+# Required for AgentKit / CDP
+CDP_API_KEY_ID=...
+CDP_API_KEY_SECRET=...
+CDP_WALLET_SECRET=...
+# Defaults to "fraxtal" if not set
+NETWORK_ID=fraxtal
+
+# Optional: if not set, a throwaway key is generated at runtime
+PRIVATE_KEY=0x...
+```
+
+3. Run
 
 ```bash
 pnpm dev
+# or
+pnpm build && pnpm start
 ```
 
-## 📁 Folder Structure
-The main agent code lives in `index.ts` where the subagents live inside the `agents` folder. The agents can have tools which reside in the `tools` folder.
+The sample entry (`src/index.ts`) asks the agent: "Convert 100 USD to EUR." This is just a placeholder & i would rather recommend using the `adk cli` or `adk web` for better testing environment 👍.
+
+### Included tools (via AgentKit)
+
+- `wethActionProvider`
+- `pythActionProvider`
+- `walletActionProvider`
+- `erc20ActionProvider`
+- `cdpApiActionProvider`
+
+These are automatically adapted into ADK tools; you can add or remove providers in `src/agents/coinbase/tools/agentkit.ts`. Check for more providers on the AgentKit repo if needed.
+
+### Project layout
 
 ```
-├── src/
-│   ├── agents/
-│   │   └── financial-agent/
-│   │       ├── index.ts
-│   │       └── tools/
-│   │           └── currency-converter-tool.ts
-│   ├── services/
-│   │   └── wallet.ts
-│   ├── env.ts
-│   └── index.ts
+src/
+  env.ts                      # env + model selection (OpenRouter optional)
+  index.ts                    # simple demo prompt
+  agents/coinbase/
+    agent.ts                  # ADK agent wiring
+    tools/
+      agentkit.ts            # AgentKit + providers setup
+      index.ts               # MCP → ADK tool adapter
 ```
 
-## ⚙️ Environment Setup
-Make sure to configure your environment variables:
+### Notes
 
-```bash
-cp .env.example .env
-```
+- This is a PoC: minimal glue code aimed at clarity, not completeness.
+- Keep your CDP keys and any `PRIVATE_KEY` safe. A generated key is not persisted.
 
-## 🧰 Dev Tools
-This starter includes:
-- 🐕 **Husky**: Git hooks for code quality
-- 🎨 **Biome**: Linting and formatting
-- 🚀 **GitHub Actions**: CI/CD pipeline
-- 📦 **PNPM**: Fast package manager
+### References
 
-## 🏗️ Building Your Agent
-1. **Create new agents** in the `src/agents/` directory
-2. **Add tools** to your agents in the `tools/` subdirectory
-3. **Configure services** in the `src/services/` directory
-4. **Update environment** variables in `src/env.ts`
+- [IQAI ADK (adk-ts)](https://adk.iqai.com)
+- [Coinbase AgentKit](https://docs.cdp.coinbase.com/agent-kit)
 
-## 📚 Links
-- [ADK Library](https://github.com/IQAICOM/adk-ts)
+### License
 
-## 🤝 Contributing
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-If you encounter any issues or have questions:
-- 📝 [Create an issue](https://github.com/IQAICOM/adk-agent-starter/issues)
+MIT

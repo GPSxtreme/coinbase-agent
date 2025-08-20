@@ -1,7 +1,7 @@
 {
-	"name": "adk-agent-starter",
+	"name": "coinbase-agent",
 	"version": "0.0.1",
-	"description": "adk-agent-starter is a starter project for creating adk agents",
+	"description": "Coinbase agent using agentkit and adk",
 	"main": "dist/index.js",
 	"scripts": {
 		"build": "tsc",
