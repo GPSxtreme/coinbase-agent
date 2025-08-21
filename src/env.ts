@@ -16,8 +16,8 @@ export const envSchema = z.object({
 	LLM_MODEL: z.string().default("gpt-4.1-mini"),
 	CDP_API_KEY_ID: z.string(),
 	CDP_API_KEY_SECRET: z.string(),
-	CDP_WALLET_SECRET: z.string(),
-	NETWORK_ID: z.string().default("fraxtal"),
+	WALLET_PRIVATE_KEY: z.string(),
+	ZERION_API_KEY: z.string(),
 });
 
 export const env = envSchema.parse(process.env);

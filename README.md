@@ -20,59 +20,61 @@ pnpm install
 Create a `.env` with the essentials:
 
 ```bash
-# Optional
 DEBUG=false
 OPEN_ROUTER_KEY=your_openrouter_key
 LLM_MODEL=gpt-4.1-mini
 
 # Required for AgentKit / CDP
+# Get these 2 from: https://portal.cdp.coinbase.com/projects/api-keys
 CDP_API_KEY_ID=...
 CDP_API_KEY_SECRET=...
-CDP_WALLET_SECRET=...
-# Defaults to "fraxtal" if not set
-NETWORK_ID=fraxtal
 
-# Optional: if not set, a throwaway key is generated at runtime
-PRIVATE_KEY=0x...
+WALLET_PRIVATE_KEY=0x...
+# get it from: https://zerion.io/api
+ZERION_API_KEY=...
 ```
 
 3. Run
 
+Run the predefined set of agent prompts `src/index.ts`
+
 ```bash
 pnpm dev
-# or
-pnpm build && pnpm start
 ```
 
-The sample entry (`src/index.ts`) asks the agent: "Convert 100 USD to EUR." This is just a placeholder & i would rather recommend using the `adk cli` or `adk web` for better testing environment 👍.
+Have a full on conversation using the adk cli (requires [adk-cli]("https://adk.iqai.com/docs/framework/get-started/cli") package installed )
+
+```bash
+# Spins up chat interface on cli
+adk run
+# (or)
+# Opens up web interface to chat with the agent
+adk web
+```
 
 ### Included tools (via AgentKit)
 
-- `wethActionProvider`
-- `pythActionProvider`
-- `walletActionProvider`
-- `erc20ActionProvider`
-- `cdpApiActionProvider`
+- `defillamaActionProvider` (Querying defi llama platform for coin data & details)
+- `pythActionProvider` (Retrieves price data from Pyth price feed)
+- `walletActionProvider` (getting wallet details & enables native token transfer)
+- `erc20ActionProvider` (enables transfer & get balance of erc20 token)
+- `x402ActionProvider` (enables http requests)
+- `zerionActionProvider` (provides portfolio overview & fungible token positions, requires API key)
 
-These are automatically adapted into ADK tools; you can add or remove providers in `src/agents/coinbase/tools/agentkit.ts`. Check for more providers on the AgentKit repo if needed.
+These are automatically adapted into ADK tools; you can add or remove providers in `src/agents/coinbase/tools/agentkit.ts`. Check for more [providers]("https://github.com/coinbase/agentkit/blob/main/typescript/agentkit/README.md#action-providers") on the AgentKit repo if needed.
 
 ### Project layout
 
-```
+```bash
 src/
   env.ts                      # env + model selection (OpenRouter optional)
   index.ts                    # simple demo prompt
   agents/coinbase/
     agent.ts                  # ADK agent wiring
     tools/
-      agentkit.ts            # AgentKit + providers setup
-      index.ts               # MCP → ADK tool adapter
+      agentkit.ts            # AgentKit + providers setup & MCP → ADK tool adapter
 ```
 
-### Notes
-
-- This is a PoC: minimal glue code aimed at clarity, not completeness.
-- Keep your CDP keys and any `PRIVATE_KEY` safe. A generated key is not persisted.
 
 ### References
 

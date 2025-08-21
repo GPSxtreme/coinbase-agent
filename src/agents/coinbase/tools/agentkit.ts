@@ -1,46 +1,68 @@
 import {
 	AgentKit,
-	CdpSmartWalletProvider,
-	cdpApiActionProvider,
+	defillamaActionProvider,
 	erc20ActionProvider,
 	pythActionProvider,
+	ViemWalletProvider,
 	walletActionProvider,
-	wethActionProvider,
+	x402ActionProvider,
+	zerionActionProvider,
 } from "@coinbase/agentkit";
-import type { Hex } from "viem";
-import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
+import { getMcpTools } from "@coinbase/agentkit-model-context-protocol";
+import { type BaseTool, convertMcpToolToBaseTool } from "@iqai/adk";
+import { type Address, createWalletClient, http } from "viem";
+import { privateKeyToAccount } from "viem/accounts";
+import { base } from "viem/chains";
 import { env } from "../../../env";
+
+/**
+ * Retrieves and converts MCP tools from AgentKit to BaseTool format.
+ *
+ * @returns An array of BaseTool objects.
+ */
+export async function getAgentKitTools(): Promise<BaseTool[]> {
+	const agentKit = await getAgentKit();
+	const { tools, toolHandler } = await getMcpTools(agentKit);
+	const baseTools = await Promise.all(
+		tools.map(async (mcpTool) =>
+			convertMcpToolToBaseTool({ mcpTool, toolHandler }),
+		),
+	);
+	return baseTools;
+}
+
 /**
  * Get the AgentKit instance.
  *
- * @returns {Promise<AgentKit>} The AgentKit instance
+ * @returns The AgentKit instance
  */
 export async function getAgentKit(): Promise<AgentKit> {
 	try {
-		let privateKey: Hex | null = null;
+		const account = privateKeyToAccount(env.WALLET_PRIVATE_KEY as Address);
 
-		if (!privateKey) {
-			privateKey = (env.CDP_WALLET_SECRET || generatePrivateKey()) as Hex;
-		}
-
-		const owner = privateKeyToAccount(privateKey);
-
-		const walletProvider = await CdpSmartWalletProvider.configureWithWallet({
-			apiKeyId: env.CDP_API_KEY_ID,
-			apiKeySecret: env.CDP_API_KEY_SECRET,
-			walletSecret: env.CDP_WALLET_SECRET,
-			networkId: env.NETWORK_ID,
-			owner: owner,
+		const client = createWalletClient({
+			account,
+			chain: base, // x402 provider seems to only work on base evm. replace this with any other chain
+			transport: http(),
 		});
+
+		const walletProvider = new ViemWalletProvider(client);
 
 		const agentkit = await AgentKit.from({
 			walletProvider,
 			actionProviders: [
-				wethActionProvider(),
+				// fetching prices of tokens
 				pythActionProvider(),
+				// to get wallet details, make native blockchain transfers
 				walletActionProvider(),
+				// makes http requests
+				x402ActionProvider(),
+				// balance & transfer ops on erc-20 tokens
 				erc20ActionProvider(),
-				cdpApiActionProvider(),
+				// Portfolio summarizer
+				zerionActionProvider(),
+				// querying defi llama platform for coin data & stuff
+				defillamaActionProvider(),
 			],
 		});
 
