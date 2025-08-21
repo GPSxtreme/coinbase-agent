@@ -42,7 +42,7 @@ Run the predefined set of agent prompts `src/index.ts`
 pnpm dev
 ```
 
-Have a full on conversation using the adk cli (requires [adk-cli]("https://adk.iqai.com/docs/framework/get-started/cli") package installed )
+Have a full on conversation using the adk cli (requires [adk-cli](https://adk.iqai.com/docs/framework/get-started/cli) package installed )
 
 ```bash
 # Spins up chat interface on cli
@@ -61,7 +61,7 @@ adk web
 - `x402ActionProvider` (enables http requests)
 - `zerionActionProvider` (provides portfolio overview & fungible token positions, requires API key)
 
-These are automatically adapted into ADK tools; you can add or remove providers in `src/agents/coinbase/tools/agentkit.ts`. Check for more [providers]("https://github.com/coinbase/agentkit/blob/main/typescript/agentkit/README.md#action-providers") on the AgentKit repo if needed.
+These are automatically adapted into ADK tools; you can add or remove providers in `src/agents/coinbase/tools/agentkit.ts`. Check for more [providers](https://github.com/coinbase/agentkit/blob/main/typescript/agentkit/README.md#action-providers) on the AgentKit repo if needed.
 
 ### Project layout
 
