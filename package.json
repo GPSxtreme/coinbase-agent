@@ -40,12 +40,14 @@
 	"dependencies": {
 		"@coinbase/agentkit": "^0.10.0",
 		"@coinbase/agentkit-model-context-protocol": "^0.2.0",
-		"@iqai/adk": "^0.2.3",
+		"@iqai/adk": "^0.3.1",
 		"@modelcontextprotocol/sdk": "^1.11.1",
 		"@openrouter/ai-sdk-provider": "^0.7.3",
+		"axios": "^1.11.0",
 		"dedent": "^1.6.0",
 		"dotenv": "^17.2.1",
 		"viem": "^2.34.0",
+		"x402-axios": "^0.6.0",
 		"zod": "^4.0.17"
 	},
 	"devDependencies": {
