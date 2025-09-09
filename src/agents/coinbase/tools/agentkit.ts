@@ -10,9 +10,14 @@ import {
 } from "@coinbase/agentkit";
 import { getMcpTools } from "@coinbase/agentkit-model-context-protocol";
 import { type BaseTool, convertMcpToolToBaseTool } from "@iqai/adk";
-import { type Address, createWalletClient, http } from "viem";
+import {
+	type Address,
+	createWalletClient,
+	http,
+	type WalletClient,
+} from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { base } from "viem/chains";
+import { baseSepolia } from "viem/chains";
 import { env } from "../../../env";
 
 /**
@@ -31,6 +36,16 @@ export async function getAgentKitTools(): Promise<BaseTool[]> {
 	return baseTools;
 }
 
+export function getWalletClient(): WalletClient {
+	const account = privateKeyToAccount(env.WALLET_PRIVATE_KEY as Address);
+
+	return createWalletClient({
+		account,
+		chain: baseSepolia,
+		transport: http(),
+	});
+}
+
 /**
  * Get the AgentKit instance.
  *
@@ -38,15 +53,7 @@ export async function getAgentKitTools(): Promise<BaseTool[]> {
  */
 export async function getAgentKit(): Promise<AgentKit> {
 	try {
-		const account = privateKeyToAccount(env.WALLET_PRIVATE_KEY as Address);
-
-		const client = createWalletClient({
-			account,
-			chain: base, // x402 provider seems to only work on base evm. replace this with any other chain
-			transport: http(),
-		});
-
-		const walletProvider = new ViemWalletProvider(client);
+		const walletProvider = new ViemWalletProvider(getWalletClient());
 
 		const agentkit = await AgentKit.from({
 			walletProvider,
